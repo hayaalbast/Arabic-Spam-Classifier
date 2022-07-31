@@ -12,3 +12,9 @@ precision = precision_score(y_test, y_pred)
 recall = recall_score(y_test, y_pred)
 accuracy = accuracy_score(y_test, y_pred)
 print('Precision: {} / Recall: {} / Accuracy: {}'.format(round(precision, 3), round(recall, 3), round(accuracy, 3)))
+
+# Cross validation
+stratifiedkf=StratifiedKFold(n_splits=5)
+score=cross_val_score(abc, X_train_tfidf, y_train, cv=stratifiedkf)
+print("Cross Validation Scores are {}".format(score))
+print("Average Cross Validation score :{}".format(score.mean()))
