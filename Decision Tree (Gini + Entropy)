@@ -1,0 +1,36 @@
+from sklearn.tree import DecisionTreeClassifier
+
+clf_gini = DecisionTreeClassifier(criterion = "gini",random_state = 100, max_depth=3, min_samples_leaf=5)
+# Performing training
+clf_gini.fit(X_train_tfidf, y_train)
+
+#Predict Output- Gini
+y_pred = clf_gini.predict(X_test_tfidf)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+accuracy = accuracy_score(y_test, y_pred)
+print('Gini: Precision: {} / Recall: {} / Accuracy: {}'.format(round(precision, 3), round(recall, 3), 
+                                                               round(accuracy, 3)))
+
+clf_entropy = DecisionTreeClassifier(criterion = "entropy", random_state = 100, max_depth = 3,
+                                     min_samples_leaf = 5)
+# Performing training
+clf_entropy.fit(X_train_tfidf, y_train)
+#Predict Output- Entropy
+y_pred = clf_entropy.predict(X_test_tfidf)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+accuracy = accuracy_score(y_test, y_pred)
+print('Entropy: Precision: {} / Recall: {} / Accuracy: {}'.format(round(precision, 3), round(recall, 3), 
+                                                                  round(accuracy, 3)))
+# Cross validation 
+stratifiedkf=StratifiedKFold(n_splits=5)
+score=cross_val_score(clf_gini, X_train_tfidf, y_train, cv=stratifiedkf)
+print("Gini Cross Validation Scores are {}".format(score))
+print("Gini Average Cross Validation score :{}".format(score.mean()))
+
+stratifiedkf=StratifiedKFold(n_splits=5)
+score=cross_val_score(clf_entropy, X_train_tfidf, y_train, cv=stratifiedkf)
+print("\nEntropy Cross Validation Scores are {}".format(score))
+print("Entropy Average Cross Validation score :{}".format(score.mean()))
+                                                                  
