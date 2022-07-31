@@ -1,0 +1,10 @@
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import precision_score, recall_score, accuracy_score
+
+X_train, X_test, y_train, y_test = train_test_split(df['v2'], df['v1'], test_size=0.3, stratify=df['v1'])
+
+tfidf = TfidfVectorizer(lowercase=False)
+X_train_tfidf = tfidf.fit_transform(X_train.values.astype('U'))
+X_test_tfidf = tfidf.transform(X_test.values.astype('U'))
