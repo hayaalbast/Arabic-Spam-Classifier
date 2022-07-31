@@ -1,0 +1,64 @@
+import gensim
+import re
+from nltk.tokenize import word_tokenize
+
+model = gensim.models.Word2Vec.load('Twt-CBOW')
+search= ["أ","إ","آ","ة","_","-","/",".","،"," و "," يا ",'"',"ـ","'","ى","\\",'\n', '\t','&quot;','?','؟','!']
+replacee= ["ا","ا","ا","ه"," "," ","","",""," و"," يا","","","","ي","",' ', ' ',' ',' ? ',' ؟ ',' ! ']
+eng= ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+
+for i in range(len(df)): 
+  text= df.at[i, 'v2'].lower()
+  for t in range(len(text)):
+    p_tashkeel = re.compile(r'[\u0617-\u061A\u064B-\u0652]')
+    text= re.sub(p_tashkeel,"", text)
+
+    p_longation = re.compile(r'(.)\1+')
+    subst = r"\1\1"
+    text= re.sub(p_longation, subst, text)
+
+    text= text.replace('وو', 'و')
+    text= text.replace('يي', 'ي')
+    text= text.replace('اا', 'ا')
+
+    for j in range(0, len(search)):
+        text= text.replace(search[j], replacee[j])
+        text= text.replace(eng[j], "")
+    for t in range(0, len(eng)):
+        text= text.replace(eng[t], "")
+
+    text= text.strip()
+  df.at[i, 'v2']= word_tokenize(text)
+  
+  wordvec= {}
+c= []
+for i in range(len(df)):
+  text= df.at[i, 'v2']
+  for t in text:
+    try:
+      vec= model.wv[t]
+      wordvec[t]= vec
+    except:
+      c.append(t)
+      continue
+
+punkt= ['+449071512431','؟','?','(',')','!','£','*','>','<',':','&','=','÷','#','@','+','å','‰','û','ì','ìï','[',']','؛','|','||','ûò','$','åó','åõ','ì¬','``','٪','^','~',
+        'و1','يا2','و7','و89034','و150','و4','و100','و5','و11','و9','ì¼120','+123','16+','18+','10:10','087075331018+','945+','3å','\u200b\u200b','وåõ','\u200b\u200b177','و20','\u200b\u200bثم',
+        '\u200b\u200bرائعه','\u200b\u200bاخري','يا\u200b\u200bرضيع','\u200b\u200bلك','\u200b\u200bسيخططون','€']
+num= []
+for i in c:
+    x= re.findall(r'\d+', i)
+    if((x!= []) and (x not in num)):
+      num.append(x)
+numlist = [item for sublist in num for item in sublist]
+for j in c:
+  if((j in punkt) or (j in numlist)):
+    c.remove(j)
+for j in range(len(df)):
+  for t in df.at[j, 'v2']:
+    if((t in punkt) or (t in numlist)):
+      df.at[j,'v2'].remove(t)
+      
+for i in range(len(df)):
+  df.at[i,'v2']= " ".join(df.at[i,'v2'])
+df
