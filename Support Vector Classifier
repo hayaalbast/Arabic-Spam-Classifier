@@ -1,0 +1,17 @@
+from sklearn.svm import SVC  
+clf = SVC(kernel='linear') 
+  
+# fitting x samples and y classes 
+clf.fit(X_train_tfidf, y_train) 
+
+y_pred = clf.predict(X_test_tfidf)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+accuracy = accuracy_score(y_test, y_pred)
+print('Precision: {} / Recall: {} / Accuracy: {}'.format(round(precision, 3), round(recall, 3), round(accuracy, 3)))
+
+# Cross validation
+stratifiedkf=StratifiedKFold(n_splits=5)
+score=cross_val_score(clf, X_train_tfidf, y_train, cv=stratifiedkf)
+print("Cross Validation Scores are {}".format(score))
+print("Average Cross Validation score :{}".format(score.mean()))
