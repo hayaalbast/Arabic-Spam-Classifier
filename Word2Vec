@@ -1,0 +1,30 @@
+import gensim
+import numpy as np
+
+w2v_model = gensim.models.Word2Vec(X_train,
+                                   size=100,
+                                   window=5,
+                                   min_count=2)
+
+# Replace the words in each text message with the learned word vector
+words = set(w2v_model.wv.index2word)
+X_train_vect = np.array([np.array([w2v_model.wv[i] for i in ls if i in words])
+                         for ls in X_train])
+X_test_vect = np.array([np.array([w2v_model.wv[i] for i in ls if i in words])
+                         for ls in X_test])
+                         
+# Average the word vectors for each sentence (and assign a vector of zeros if the model
+# did not learn any of the words in the text message during training
+X_train_vect_avg = []
+for v in X_train_vect:
+    if v.size:
+        X_train_vect_avg.append(v.mean(axis=0))
+    else:
+        X_train_vect_avg.append(np.zeros(100, dtype=float))
+        
+X_test_vect_avg = []
+for v in X_test_vect:
+    if v.size:
+        X_test_vect_avg.append(v.mean(axis=0))
+    else:
+        X_test_vect_avg.append(np.zeros(100, dtype=float))                      
