@@ -1,0 +1,14 @@
+from sklearn.ensemble import AdaBoostClassifier
+
+# Create adaboost classifer object
+abc = AdaBoostClassifier(n_estimators=50, learning_rate=1)
+
+# Train Adaboost Classifer
+model = abc.fit(X_train_tfidf, y_train)
+
+#Predict the response for test dataset
+y_pred = model.predict(X_test_tfidf)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+accuracy = accuracy_score(y_test, y_pred)
+print('Precision: {} / Recall: {} / Accuracy: {}'.format(round(precision, 3), round(recall, 3), round(accuracy, 3)))
