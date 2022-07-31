@@ -1,0 +1,37 @@
+# Import the tools needed from keras
+import keras.backend as K
+from keras.layers import Dense, Embedding, LSTM, Flatten, Conv2D, MaxPooling2D
+from keras.models import Sequential
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+# Initialize and fit the tokenizer
+tokenizer = Tokenizer()
+tokenizer.fit_on_texts(X_train.astype(str))
+
+# Use that tokenizer to transform the text messages in the training and test sets
+X_train_seq = tokenizer.texts_to_sequences(X_train.astype(str))
+X_test_seq = tokenizer.texts_to_sequences(X_test.astype(str))
+
+# Pad the sequences so each sequence is the same length
+X_train_seq_padded = pad_sequences(X_train_seq, 50)
+X_test_seq_padded = pad_sequences(X_test_seq, 50)
+
+# Construct a simple RNN model
+model = Sequential()
+
+model.add(Embedding(len(tokenizer.index_word)+1, 32))
+model.add(LSTM(32, dropout=0, recurrent_dropout=0))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
+model.summary()
+# Compile the model
+model.compile(optimizer='adam',
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
+              
+# Fit the RNN model
+history = model.fit(X_train_seq_padded, y_train, 
+                    batch_size=32, epochs=10,
+                    validation_data=(X_test_seq_padded, y_test))
+                    
+                    
