@@ -1,0 +1,11 @@
+import pandas as pd
+from googletrans import Translator
+df= pd.read_csv('spam.csv', encoding= 'latin1')
+df.drop(['Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4'], axis= 1, inplace= True)
+df= df.replace('spam', 1)
+df= df.replace('ham', 0)
+
+tran= Translator()
+for i in range(len(df)):
+  res= tran.translate(df['v2'][i], dest= 'ar')
+  df.at[i, 'v2']= res.text
