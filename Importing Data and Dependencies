@@ -1,0 +1,11 @@
+!pip3 install googletrans==3.1.0a0
+!pip install gensim
+import nltk
+nltk.download('punkt')
+!pip install ktrain
+!pip install tensorflow
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import cross_val_score,StratifiedKFold
+df= pd.read_csv('arabicdata.csv')
